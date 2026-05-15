@@ -11,7 +11,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/forge/1.3.1/forge.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
   :root {
     --bg: #0a0810;
     --surface: #110f1a;
@@ -28,7 +28,7 @@
     --mono: 'IBM Plex Mono', monospace;
     --display: 'Syne', sans-serif;
   }
-
+ 
   body {
     background: var(--bg);
     color: var(--text);
@@ -37,7 +37,7 @@
     padding: 0;
     overflow-x: hidden;
   }
-
+ 
   /* Grid background */
   body::before {
     content: '';
@@ -50,7 +50,7 @@
     pointer-events: none;
     z-index: 0;
   }
-
+ 
   .wrap {
     position: relative;
     z-index: 1;
@@ -58,12 +58,12 @@
     margin: 0 auto;
     padding: 60px 24px 80px;
   }
-
+ 
   /* Header */
   .header {
     margin-bottom: 52px;
   }
-
+ 
   .badge {
     display: inline-flex;
     align-items: center;
@@ -79,7 +79,7 @@
     text-transform: uppercase;
     margin-bottom: 20px;
   }
-
+ 
   .badge::before {
     content: '';
     width: 6px; height: 6px;
@@ -87,12 +87,12 @@
     background: var(--accent);
     animation: pulse 2s infinite;
   }
-
+ 
   @keyframes pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.3; }
   }
-
+ 
   h1 {
     font-size: clamp(32px, 5vw, 52px);
     font-weight: 800;
@@ -100,9 +100,9 @@
     letter-spacing: -0.03em;
     margin-bottom: 14px;
   }
-
+ 
   h1 span { color: var(--accent); }
-
+ 
   .subtitle {
     font-size: 15px;
     color: var(--muted2);
@@ -110,7 +110,7 @@
     font-family: var(--mono);
     max-width: 480px;
   }
-
+ 
   /* Card */
   .card {
     background: var(--surface);
@@ -118,9 +118,9 @@
     border-radius: 12px;
     overflow: hidden;
   }
-
+ 
   .card + .card { margin-top: 16px; }
-
+ 
   .card-header {
     padding: 18px 24px;
     border-bottom: 1px solid var(--border);
@@ -128,7 +128,7 @@
     align-items: center;
     gap: 10px;
   }
-
+ 
   .card-header-icon {
     width: 28px; height: 28px;
     background: var(--accent-dim);
@@ -137,7 +137,7 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 13px;
   }
-
+ 
   .card-title {
     font-size: 13px;
     font-weight: 600;
@@ -146,24 +146,24 @@
     text-transform: uppercase;
     font-family: var(--mono);
   }
-
+ 
   .card-body {
     padding: 24px;
   }
-
+ 
   /* Grid layout for form */
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
   .span2 { grid-column: span 2; }
-
+ 
   @media (max-width: 600px) {
     .grid2, .grid3 { grid-template-columns: 1fr; }
     .span2 { grid-column: span 1; }
   }
-
+ 
   /* Form fields */
   .field { display: flex; flex-direction: column; gap: 7px; }
-
+ 
   label {
     font-size: 11px;
     font-weight: 600;
@@ -172,7 +172,7 @@
     color: var(--muted);
     font-family: var(--mono);
   }
-
+ 
   input, select {
     background: var(--surface2);
     border: 1px solid var(--border);
@@ -186,14 +186,14 @@
     width: 100%;
     appearance: none;
   }
-
+ 
   input::placeholder { color: var(--muted); }
-
+ 
   input:focus, select:focus {
     border-color: rgba(168,85,247,0.5);
     background: rgba(168,85,247,0.04);
   }
-
+ 
   select {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
@@ -201,16 +201,16 @@
     padding-right: 36px;
     cursor: pointer;
   }
-
+ 
   select option { background: #1a1726; }
-
+ 
   /* Divider */
   .divider {
     height: 1px;
     background: var(--border);
     margin: 24px 0;
   }
-
+ 
   /* Generate button */
   .btn-generate {
     width: 100%;
@@ -229,11 +229,11 @@
     position: relative;
     overflow: hidden;
   }
-
+ 
   .btn-generate:hover { opacity: 0.9; }
   .btn-generate:active { transform: scale(0.99); }
   .btn-generate:disabled { opacity: 0.4; cursor: not-allowed; }
-
+ 
   .btn-generate .spinner {
     display: none;
     width: 16px; height: 16px;
@@ -243,12 +243,12 @@
     animation: spin 0.7s linear infinite;
     margin: 0 auto;
   }
-
+ 
   .btn-generate.loading .btn-text { display: none; }
   .btn-generate.loading .spinner { display: block; }
-
+ 
   @keyframes spin { to { transform: rotate(360deg); } }
-
+ 
   /* Error */
   .error-box {
     display: none;
@@ -261,19 +261,19 @@
     color: var(--danger);
     margin-top: 16px;
   }
-
+ 
   /* Output section */
   .output-section {
     display: none;
     margin-top: 16px;
     animation: fadeUp 0.3s ease;
   }
-
+ 
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
   }
-
+ 
   /* Output tabs */
   .tabs {
     display: flex;
@@ -282,7 +282,7 @@
     padding: 16px 24px 0;
     border-bottom: 1px solid var(--border);
   }
-
+ 
   .tab {
     font-family: var(--mono);
     font-size: 11px;
@@ -299,13 +299,13 @@
     transition: color 0.15s;
     margin-bottom: -1px;
   }
-
+ 
   .tab:hover { color: var(--text); }
   .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-
+ 
   .tab-content { display: none; padding: 20px 24px 24px; }
   .tab-content.active { display: block; }
-
+ 
   /* Code blocks */
   .code-block {
     position: relative;
@@ -314,7 +314,7 @@
     border-radius: 8px;
     overflow: hidden;
   }
-
+ 
   .code-block pre {
     font-family: var(--mono);
     font-size: 11.5px;
@@ -327,11 +327,11 @@
     max-height: 260px;
     overflow-y: auto;
   }
-
+ 
   .code-block pre::-webkit-scrollbar { width: 4px; height: 4px; }
   .code-block pre::-webkit-scrollbar-track { background: transparent; }
   .code-block pre::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 2px; }
-
+ 
   .copy-btn {
     position: absolute;
     top: 8px; right: 8px;
@@ -346,10 +346,10 @@
     transition: all 0.15s;
     letter-spacing: 0.05em;
   }
-
+ 
   .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
   .copy-btn.copied { color: var(--accent); border-color: var(--accent); }
-
+ 
   /* Download buttons */
   .download-grid {
     display: grid;
@@ -357,7 +357,7 @@
     gap: 10px;
     margin-top: 16px;
   }
-
+ 
   .dl-btn {
     display: flex;
     align-items: center;
@@ -371,12 +371,12 @@
     transition: border-color 0.15s, background 0.15s;
     color: var(--text);
   }
-
+ 
   .dl-btn:hover {
     border-color: rgba(168,85,247,0.35);
     background: var(--accent-dim2);
   }
-
+ 
   .dl-btn-icon {
     width: 32px; height: 32px;
     background: var(--accent-dim);
@@ -385,9 +385,9 @@
     font-size: 15px;
     flex-shrink: 0;
   }
-
+ 
   .dl-btn-info { min-width: 0; }
-
+ 
   .dl-btn-name {
     font-size: 12px;
     font-weight: 700;
@@ -395,14 +395,14 @@
     color: var(--text);
     letter-spacing: 0.04em;
   }
-
+ 
   .dl-btn-desc {
     font-size: 11px;
     color: var(--muted);
     font-family: var(--mono);
     margin-top: 2px;
   }
-
+ 
   /* Cert info table */
   .info-table {
     width: 100%;
@@ -410,24 +410,24 @@
     font-family: var(--mono);
     font-size: 12px;
   }
-
+ 
   .info-table tr + tr td { border-top: 1px solid var(--border); }
-
+ 
   .info-table td {
     padding: 9px 0;
   }
-
+ 
   .info-table td:first-child {
     color: var(--muted);
     width: 40%;
     padding-right: 16px;
   }
-
+ 
   .info-table td:last-child {
     color: var(--text);
     word-break: break-all;
   }
-
+ 
   .info-badge {
     display: inline-block;
     background: rgba(168,85,247,0.1);
@@ -438,7 +438,7 @@
     border-radius: 3px;
     margin: 2px 2px 2px 0;
   }
-
+ 
   /* Download all btn */
   .btn-dl-all {
     display: inline-flex;
@@ -458,11 +458,11 @@
     margin-top: 20px;
     text-decoration: none;
   }
-
+ 
   .btn-dl-all:hover {
     background: rgba(168,85,247,0.18);
   }
-
+ 
   /* FQDN Critical Field */
   .fqdn-field {
     background: rgba(220, 38, 38, 0.05);
@@ -471,14 +471,14 @@
     padding: 12px 14px 10px;
     position: relative;
   }
-
+ 
   .fqdn-label {
     color: #f87171 !important;
     display: flex;
     align-items: center;
     gap: 6px;
   }
-
+ 
   .fqdn-critical-dot {
     width: 6px; height: 6px;
     border-radius: 50%;
@@ -486,7 +486,7 @@
     flex-shrink: 0;
     animation: pulse 1.5s infinite;
   }
-
+ 
   .fqdn-badge {
     font-size: 9px;
     font-weight: 700;
@@ -498,18 +498,18 @@
     border-radius: 3px;
     margin-left: auto;
   }
-
+ 
   .fqdn-input {
     border-color: rgba(220, 38, 38, 0.25) !important;
     background: rgba(220, 38, 38, 0.04) !important;
     margin-top: 2px;
   }
-
+ 
   .fqdn-input:focus {
     border-color: rgba(220, 38, 38, 0.6) !important;
     background: rgba(220, 38, 38, 0.07) !important;
   }
-
+ 
   .fqdn-hint {
     font-family: var(--mono);
     font-size: 10px;
@@ -518,7 +518,7 @@
     margin-top: 5px;
     display: block;
   }
-
+ 
   /* Download CTA */
   .download-cta {
     display: none;
@@ -530,14 +530,14 @@
     background: linear-gradient(135deg, #1a1130 0%, #120e22 100%);
     animation: fadeUp 0.4s ease;
   }
-
+ 
   .download-cta-glow {
     position: absolute;
     inset: 0;
     background: radial-gradient(ellipse at 50% 0%, rgba(168,85,247,0.18) 0%, transparent 70%);
     pointer-events: none;
   }
-
+ 
   .download-cta::before {
     content: '';
     position: absolute;
@@ -546,13 +546,13 @@
     background: linear-gradient(90deg, transparent, #a855f7, #c084fc, #a855f7, transparent);
     animation: shimmer 2.5s infinite;
   }
-
+ 
   @keyframes shimmer {
     0% { opacity: 0.5; }
     50% { opacity: 1; }
     100% { opacity: 0.5; }
   }
-
+ 
   .download-cta-inner {
     position: relative;
     z-index: 1;
@@ -562,18 +562,18 @@
     padding: 24px 28px;
     flex-wrap: wrap;
   }
-
+ 
   .download-cta-icon {
     font-size: 32px;
     flex-shrink: 0;
     animation: sway 3s ease-in-out infinite;
   }
-
+ 
   @keyframes sway {
     0%, 100% { transform: rotate(-5deg); }
     50% { transform: rotate(5deg); }
   }
-
+ 
   .download-cta-text {
     display: flex;
     flex-direction: column;
@@ -581,26 +581,26 @@
     flex: 1;
     min-width: 180px;
   }
-
+ 
   .download-cta-title {
     font-size: 17px;
     font-weight: 700;
     color: #f0e6ff;
     letter-spacing: -0.01em;
   }
-
+ 
   .download-cta-sub {
     font-family: var(--mono);
     font-size: 11px;
     color: #9b7ec8;
   }
-
+ 
   .download-cta-buttons {
     display: flex;
     gap: 10px;
     flex-shrink: 0;
   }
-
+ 
   .dl-cta-btn {
     display: flex;
     align-items: center;
@@ -615,33 +615,233 @@
     transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
     letter-spacing: 0.01em;
   }
-
+ 
   .dl-cta-btn:hover { transform: translateY(-2px); opacity: 0.92; }
   .dl-cta-btn:active { transform: translateY(0); }
-
+ 
   .dl-cta-crt {
     background: #a855f7;
     color: #fff;
     box-shadow: 0 4px 20px rgba(168,85,247,0.4);
   }
-
+ 
   .dl-cta-crt:hover {
     box-shadow: 0 6px 28px rgba(168,85,247,0.55);
   }
-
+ 
   .dl-cta-key {
     background: transparent;
     color: #c084fc;
     border: 1px solid rgba(168,85,247,0.45);
   }
-
+ 
   .dl-cta-key:hover {
     background: rgba(168,85,247,0.1);
     border-color: rgba(168,85,247,0.7);
   }
-
+ 
   .dl-cta-btn-icon { font-size: 16px; }
-
+ 
+  /* SAN Mismatch Warning */
+  .san-warning {
+    display: none;
+    background: rgba(251, 146, 60, 0.08);
+    border: 1px solid rgba(251, 146, 60, 0.35);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-top: 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    animation: fadeUp 0.25s ease;
+  }
+  .san-warning-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fb923c;
+    margin-bottom: 10px;
+    font-family: var(--display);
+    letter-spacing: 0.01em;
+  }
+  .san-warning-title::before {
+    content: '⚠';
+    font-size: 15px;
+  }
+  .san-warning-section {
+    margin-bottom: 10px;
+  }
+  .san-warning-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fb923c;
+    opacity: 0.75;
+    margin-bottom: 4px;
+  }
+  .san-warning p {
+    color: #fcd9b0;
+    line-height: 1.7;
+    margin: 0;
+  }
+  .san-warning code {
+    background: rgba(251,146,60,0.15);
+    border: 1px solid rgba(251,146,60,0.2);
+    border-radius: 3px;
+    padding: 1px 5px;
+    color: #fdba74;
+    font-size: 11px;
+  }
+  .san-warning ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .san-warning ul li {
+    color: #fcd9b0;
+    line-height: 1.7;
+    padding-left: 14px;
+    position: relative;
+  }
+  .san-warning ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: #fb923c;
+    font-size: 10px;
+    top: 1px;
+  }
+  .san-warning-fix {
+    background: rgba(74, 222, 128, 0.06);
+    border: 1px solid rgba(74, 222, 128, 0.2);
+    border-radius: 7px;
+    padding: 10px 14px;
+    margin-top: 8px;
+  }
+  .san-warning-fix-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #4ade80;
+    opacity: 0.8;
+    margin-bottom: 5px;
+  }
+  .san-warning-fix p {
+    color: #bbf7d0;
+  }
+ 
+  /* Standards Analysis Box */
+  .standards-analysis {
+    display: none;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 16px;
+    border: 1px solid var(--border);
+    animation: fadeUp 0.3s ease;
+  }
+  .standards-analysis-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+  .standards-analysis-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-family: var(--mono);
+    color: var(--muted2);
+  }
+  .standards-analysis-badge {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.06em;
+  }
+  .standards-analysis-badge.pass {
+    background: rgba(74,222,128,0.1);
+    border: 1px solid rgba(74,222,128,0.25);
+    color: #4ade80;
+  }
+  .standards-analysis-badge.warn {
+    background: rgba(251,146,60,0.1);
+    border: 1px solid rgba(251,146,60,0.25);
+    color: #fb923c;
+  }
+  .standards-analysis-badge.fail {
+    background: rgba(255,77,109,0.1);
+    border: 1px solid rgba(255,77,109,0.3);
+    color: var(--danger);
+  }
+  .standards-analysis-body {
+    padding: 16px 18px;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .sa-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 7px;
+    border: 1px solid transparent;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+  .sa-check.ok {
+    background: rgba(74,222,128,0.04);
+    border-color: rgba(74,222,128,0.12);
+  }
+  .sa-check.warn {
+    background: rgba(251,146,60,0.05);
+    border-color: rgba(251,146,60,0.18);
+  }
+  .sa-check.fail {
+    background: rgba(255,77,109,0.06);
+    border-color: rgba(255,77,109,0.2);
+  }
+  .sa-check-icon {
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .sa-check-content { flex: 1; }
+  .sa-check-name {
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    margin-bottom: 2px;
+  }
+  .sa-check.ok .sa-check-name { color: #4ade80; }
+  .sa-check.warn .sa-check-name { color: #fb923c; }
+  .sa-check.fail .sa-check-name { color: var(--danger); }
+  .sa-check-detail {
+    color: var(--muted2);
+    font-size: 11px;
+    line-height: 1.6;
+  }
+  .sa-check-suggestion {
+    margin-top: 5px;
+    font-size: 11px;
+    line-height: 1.6;
+    color: #a8b4c8;
+    border-left: 2px solid;
+    padding-left: 8px;
+  }
+  .sa-check.warn .sa-check-suggestion { border-color: rgba(251,146,60,0.4); }
+  .sa-check.fail .sa-check-suggestion { border-color: rgba(255,77,109,0.4); }
+ 
   /* Footer */
   .footer {
     margin-top: 48px;
@@ -656,13 +856,13 @@
 </head>
 <body>
 <div class="wrap">
-
+ 
   <header class="header">
     <div class="badge">client-side · zero server · open source</div>
     <h1>S1 SSL Certificate<br><span>Generator</span></h1>
     <p class="subtitle">// Generate self signed certificates for S1 On-Prem Management and EDG</p>
   </header>
-
+ 
   <!-- Form Card -->
   <div class="card">
     <div class="card-header">
@@ -670,7 +870,7 @@
       <span class="card-title">Certificate Details</span>
     </div>
     <div class="card-body">
-
+ 
       <div class="grid2" style="margin-bottom:16px;">
         <div class="field">
           <label>Domain (for SAN)</label>
@@ -686,9 +886,34 @@
           <span class="fqdn-hint">⚠ Must exactly match the Management server's FQDN</span>
         </div>
       </div>
-
+ 
+      <!-- SAN / CN mismatch warning -->
+      <div class="san-warning" id="sanWarning">
+        <div class="san-warning-title">SAN / Common Name Mismatch Detected</div>
+        <div class="san-warning-section">
+          <div class="san-warning-label">The Problem</div>
+          <p>The Common Name (CN) you entered is <code id="sanWarnCn"></code>, but this hostname is <strong>not covered</strong> by the Subject Alternative Names (SAN) that will be generated from domain <code id="sanWarnDomain"></code> (i.e., <code id="sanWarnSans"></code>).</p>
+        </div>
+        <div class="san-warning-section">
+          <div class="san-warning-label">Why This Is Wrong (RFC 5280 / RFC 2818 / CA/Browser Forum)</div>
+          <ul>
+            <li>Per <strong>RFC 2818 §3.1</strong>, TLS clients <em>must</em> use the SAN extension for hostname validation and ignore the CN field if SANs are present. If the CN is not in the SAN, the certificate will fail hostname verification.</li>
+            <li>Per <strong>CA/Browser Forum Baseline Requirements</strong>, any FQDN that a certificate is intended to cover must appear explicitly in the SAN extension — the CN alone is insufficient and deprecated for this purpose.</li>
+            <li>Modern browsers (Chrome 58+, Firefox, Edge) and TLS libraries (OpenSSL 1.1+) enforce SAN-only validation. A certificate whose CN is not in the SAN will produce a <strong>hostname mismatch error</strong> even if the CN looks correct.</li>
+            <li>SentinelOne Management and EDG require the server's FQDN to be resolvable and present in the SAN. A mismatch will cause agent connectivity failures and console errors.</li>
+          </ul>
+        </div>
+        <div class="san-warning-fix">
+          <div class="san-warning-fix-label">✅ Recommendation — Fix It One of These Ways</div>
+          <ul>
+            <li>Set the <strong>Domain (for SAN)</strong> to the parent domain of your FQDN (e.g., if FQDN is <code id="sanFixExample"></code>, use <code id="sanFixDomain"></code> as the Domain). The wildcard SAN <code id="sanFixWildcard"></code> will then cover your FQDN.</li>
+            <li>Or, set the <strong>Common Name</strong> to a hostname that <em>is</em> covered by the SAN wildcards — either exactly matching the domain or a single-level subdomain of it.</li>
+          </ul>
+        </div>
+      </div>
+ 
       <div class="divider"></div>
-
+ 
       <div class="grid3" style="margin-bottom:16px;">
         <div class="field">
           <label>Country</label>
@@ -893,7 +1118,7 @@
           <input type="text" id="locality" placeholder="Los Angeles" value="Los Angeles" />
         </div>
       </div>
-
+ 
       <div class="grid2" style="margin-bottom:16px;">
         <div class="field">
           <label>Organization</label>
@@ -904,7 +1129,7 @@
           <input type="text" id="ou" placeholder="Cybersecurity" value="Cybersecurity" />
         </div>
       </div>
-
+ 
       <div class="grid2">
         <div class="field">
           <label>Email Address</label>
@@ -920,17 +1145,39 @@
           </select>
         </div>
       </div>
-
+ 
       <div id="errorBox" class="error-box"></div>
-
+ 
       <button class="btn-generate" id="generateBtn" onclick="generateCert()">
         <span class="btn-text">Generate Certificate</span>
         <div class="spinner"></div>
       </button>
-
+ 
+      <!-- Download CTA -->
+      <div class="download-cta" id="downloadCta" style="margin-top:16px;">
+        <div class="download-cta-glow"></div>
+        <div class="download-cta-inner">
+          <div class="download-cta-icon">🔐</div>
+          <div class="download-cta-text">
+            <span class="download-cta-title">Your certificates are ready</span>
+            <span class="download-cta-sub">Download both files and deploy to your S1 Management server or EDG</span>
+          </div>
+          <div class="download-cta-buttons">
+            <a class="dl-cta-btn dl-cta-crt" id="ctaDlCrt">
+              <span class="dl-cta-btn-icon">📄</span>
+              <span class="dl-cta-btn-label">certificate.crt</span>
+            </a>
+            <a class="dl-cta-btn dl-cta-key" id="ctaDlKey">
+              <span class="dl-cta-btn-icon">🗝️</span>
+              <span class="dl-cta-btn-label">certificate.key</span>
+            </a>
+          </div>
+        </div>
+      </div>
+ 
     </div>
   </div>
-
+ 
   <!-- Output -->
   <div class="output-section" id="outputSection">
     <div class="card">
@@ -938,37 +1185,48 @@
         <div class="card-header-icon">✅</div>
         <span class="card-title">Generated Certificate</span>
       </div>
-
+ 
       <div class="tabs">
         <button class="tab active" onclick="switchTab('info', this)">Info</button>
-        <button class="tab" onclick="switchTab('crt', this)">server.crt</button>
-        <button class="tab" onclick="switchTab('key', this)">server.key</button>
-        <button class="tab" onclick="switchTab('csr', this)">server.csr</button>
+        <button class="tab" onclick="switchTab('crt', this)">certificate.crt</button>
+        <button class="tab" onclick="switchTab('key', this)">certificate.key</button>
+        <button class="tab" onclick="switchTab('csr', this)">certificate.csr</button>
         <button class="tab" onclick="switchTab('ext', this)">v3.ext</button>
       </div>
-
+ 
       <!-- Info tab -->
       <div class="tab-content active" id="tab-info">
         <table class="info-table" id="certInfoTable"></table>
+ 
+        <!-- Standards Analysis -->
+        <div class="standards-analysis" id="standardsAnalysis">
+          <div class="standards-analysis-header">
+            <span>🔍</span>
+            <span class="standards-analysis-title">Standards Compliance Analysis</span>
+            <span class="standards-analysis-badge" id="standardsBadge">CHECKING</span>
+          </div>
+          <div class="standards-analysis-body" id="standardsChecks"></div>
+        </div>
+ 
         <div class="download-grid" style="margin-top:24px;">
           <a class="dl-btn" id="dlCrt">
             <div class="dl-btn-icon">📄</div>
             <div class="dl-btn-info">
-              <div class="dl-btn-name">server.crt</div>
+              <div class="dl-btn-name">certificate.crt</div>
               <div class="dl-btn-desc">Certificate file</div>
             </div>
           </a>
           <a class="dl-btn" id="dlKey">
             <div class="dl-btn-icon">🔐</div>
             <div class="dl-btn-info">
-              <div class="dl-btn-name">server.key</div>
+              <div class="dl-btn-name">certificate.key</div>
               <div class="dl-btn-desc">Private key</div>
             </div>
           </a>
           <a class="dl-btn" id="dlCsr">
             <div class="dl-btn-icon">📝</div>
             <div class="dl-btn-info">
-              <div class="dl-btn-name">server.csr</div>
+              <div class="dl-btn-name">certificate.csr</div>
               <div class="dl-btn-desc">Signing request</div>
             </div>
           </a>
@@ -981,7 +1239,7 @@
           </a>
         </div>
       </div>
-
+ 
       <!-- Code tabs -->
       <div class="tab-content" id="tab-crt">
         <div class="code-block">
@@ -1007,60 +1265,39 @@
           <button class="copy-btn" onclick="copyCode('ext', this)">COPY</button>
         </div>
       </div>
-
+ 
     </div>
+ 
   </div>
-
-  <!-- Big Download CTA -->
-  <div class="download-cta" id="downloadCta">
-    <div class="download-cta-glow"></div>
-    <div class="download-cta-inner">
-      <div class="download-cta-icon">🔐</div>
-      <div class="download-cta-text">
-        <span class="download-cta-title">Your certificates are ready</span>
-        <span class="download-cta-sub">Download both files and deploy to your S1 Management server or EDG</span>
-      </div>
-      <div class="download-cta-buttons">
-        <a class="dl-cta-btn dl-cta-crt" id="ctaDlCrt">
-          <span class="dl-cta-btn-icon">📄</span>
-          <span class="dl-cta-btn-label">server.crt</span>
-        </a>
-        <a class="dl-cta-btn dl-cta-key" id="ctaDlKey">
-          <span class="dl-cta-btn-icon">🗝️</span>
-          <span class="dl-cta-btn-label">server.key</span>
-        </a>
-      </div>
-    </div>
-  </div>
-
+ 
   <footer class="footer">
     all cryptographic operations run locally in your browser via node-forge &nbsp;·&nbsp; private keys never leave your device
   </footer>
-
+ 
 </div>
-
+ 
 <script>
 let generatedFiles = {};
-
+ 
 function v(id) { return document.getElementById(id).value.trim(); }
-
+ 
 function showError(msg) {
   const b = document.getElementById('errorBox');
   b.textContent = '⚠ ' + msg;
   b.style.display = 'block';
 }
-
+ 
 function hideError() {
   document.getElementById('errorBox').style.display = 'none';
 }
-
+ 
 function switchTab(name, el) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('tab-' + name).classList.add('active');
 }
-
+ 
 function copyCode(name, btn) {
   const text = document.getElementById('code-' + name).textContent;
   navigator.clipboard.writeText(text).then(() => {
@@ -1069,14 +1306,201 @@ function copyCode(name, btn) {
     setTimeout(() => { btn.textContent = 'COPY'; btn.classList.remove('copied'); }, 2000);
   });
 }
-
+ 
 function makeDownloadLink(el, content, filename) {
   const blob = new Blob([content], { type: 'text/plain' });
   const url = URL.createObjectURL(blob);
   el.href = url;
   el.download = filename;
 }
-
+ 
+// ── SAN / CN Mismatch Check ───────────────────────────────────────────────────
+// Returns true if the FQDN is covered by domain (exact match or single-level
+// subdomain, matching the wildcard *.domain that will be placed in the SAN).
+function fqdnIsCoveredByDomain(fqdn, domain) {
+  if (!fqdn || !domain) return false;
+  const f = fqdn.toLowerCase().trim();
+  const d = domain.toLowerCase().trim();
+  // exact match: fqdn == domain
+  if (f === d) return true;
+  // wildcard match: fqdn is exactly one label + '.' + domain
+  // e.g. fqdn = 'onprem.domain.com', domain = 'domain.com'
+  if (f.endsWith('.' + d)) {
+    const prefix = f.slice(0, f.length - d.length - 1);
+    // prefix must be a single label (no dots)
+    if (prefix.length > 0 && !prefix.includes('.')) return true;
+  }
+  return false;
+}
+ 
+function checkSanWarning() {
+  const domain = v('domain');
+  const fqdn = v('fqdn');
+  const warnEl = document.getElementById('sanWarning');
+  if (!domain || !fqdn) { warnEl.style.display = 'none'; return; }
+  if (fqdnIsCoveredByDomain(fqdn, domain)) {
+    warnEl.style.display = 'none';
+  } else {
+    // Show warning with dynamic values
+    document.getElementById('sanWarnCn').textContent = fqdn;
+    document.getElementById('sanWarnDomain').textContent = domain;
+    document.getElementById('sanWarnSans').textContent = `DNS:${domain}, DNS:*.${domain}`;
+    document.getElementById('sanFixExample').textContent = fqdn;
+    // Suggest the parent domain from the fqdn
+    const parts = fqdn.split('.');
+    const suggestedDomain = parts.length >= 2 ? parts.slice(-2).join('.') : domain;
+    document.getElementById('sanFixDomain').textContent = suggestedDomain;
+    document.getElementById('sanFixWildcard').textContent = `*.${suggestedDomain}`;
+    warnEl.style.display = 'block';
+  }
+}
+ 
+// Wire live validation to the domain and fqdn inputs (3 s debounce to avoid false positives)
+let sanWarningTimer = null;
+function scheduleSanWarning() {
+  // Immediately hide any existing warning while the user is still typing
+  document.getElementById('sanWarning').style.display = 'none';
+  clearTimeout(sanWarningTimer);
+  sanWarningTimer = setTimeout(checkSanWarning, 1000);
+}
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('domain').addEventListener('input', scheduleSanWarning);
+  document.getElementById('fqdn').addEventListener('input', scheduleSanWarning);
+});
+ 
+// ── Standards Compliance Analysis ─────────────────────────────────────────────
+function runStandardsAnalysis(cert, days, fqdn, domain) {
+  const checks = [];
+ 
+  // 1. Key size – NIST SP 800-57 / CA/B Forum: RSA minimum 2048
+  checks.push({
+    name: 'RSA Key Size ≥ 2048 bits',
+    status: 'ok',
+    detail: 'RSA 2048-bit key generated. Meets NIST SP 800-57 and CA/Browser Forum Baseline Requirements.',
+    suggestion: null
+  });
+ 
+  // 2. Signature algorithm – SHA-1 is deprecated (RFC 8017, CA/B Forum)
+  checks.push({
+    name: 'Signature Algorithm: SHA-256',
+    status: 'ok',
+    detail: 'SHA-256withRSA used. SHA-1 is deprecated per RFC 8017 and rejected by all modern browsers.',
+    suggestion: null
+  });
+ 
+  // 3. Validity period – CA/B Forum BR §6.3.2: max 398 days for publicly-trusted certs;
+  //    for self-signed/internal the practical Apple/Chrome limit is 825 days (before 2020 policy).
+  //    Post Sept 2020, publicly trusted certs max 398 days. Internal CAs are exempt but flagged as advisory.
+  let validityStatus, validityDetail, validitySuggestion;
+  if (days <= 398) {
+    validityStatus = 'ok';
+    validityDetail = `${days}-day validity. Complies with CA/Browser Forum BR §6.3.2 (≤398 days) for publicly-trusted certificates.`;
+    validitySuggestion = null;
+  } else if (days <= 825) {
+    validityStatus = 'warn';
+    validityDetail = `${days}-day validity. Exceeds the 398-day CA/Browser Forum limit for publicly-trusted certs (effective Sept 2020).`;
+    validitySuggestion = 'For internal/private CAs (SentinelOne on-prem), this is acceptable — but be aware that Apple devices and Chrome enforce 398-day limits on publicly-trusted certs. Recommended: use 365 days for broad compatibility.';
+  } else {
+    validityStatus = 'fail';
+    validityDetail = `${days}-day validity. Significantly exceeds all modern standards.`;
+    validitySuggestion = 'CA/Browser Forum BR §6.3.2 mandates ≤398 days for trusted certs. Even for internal CAs, certificates valid for more than 2-3 years are a security risk — compromise means extended exposure. Use ≤825 days for internal, ≤398 for best-practice compliance.';
+  }
+  checks.push({ name: `Validity Period (${days} days)`, status: validityStatus, detail: validityDetail, suggestion: validitySuggestion });
+ 
+  // 4. SAN present – RFC 5280 §4.2.1.6, RFC 2818 §3.1
+  checks.push({
+    name: 'Subject Alternative Name (SAN) Extension Present',
+    status: 'ok',
+    detail: `SAN extension included with DNS:${domain} and DNS:*.${domain}. Required by RFC 5280 §4.2.1.6 and RFC 2818 §3.1.`,
+    suggestion: null
+  });
+ 
+  // 5. CN covered by SAN – RFC 2818 / CA/B Forum
+  const cnCovered = fqdnIsCoveredByDomain(fqdn, domain);
+  if (cnCovered) {
+    checks.push({
+      name: 'Common Name Covered by SAN',
+      status: 'ok',
+      detail: `The CN "${fqdn}" is covered by the wildcard SAN DNS:*.${domain}. TLS hostname validation will succeed per RFC 2818 §3.1.`,
+      suggestion: null
+    });
+  } else {
+    checks.push({
+      name: 'Common Name Covered by SAN',
+      status: 'fail',
+      detail: `The CN "${fqdn}" is NOT covered by SANs DNS:${domain} / DNS:*.${domain}. RFC 2818 §3.1 requires TLS clients to use SANs for hostname validation — the CN is ignored when SANs are present.`,
+      suggestion: `Align the Domain field with the CN's parent domain, or change the CN to a hostname that the wildcard *.${domain} covers. Otherwise TLS clients will reject this certificate with a hostname mismatch error.`
+    });
+  }
+ 
+  // 6. basicConstraints CA:TRUE — advisory warning for server certs
+  checks.push({
+    name: 'basicConstraints: CA:TRUE',
+    status: 'warn',
+    detail: 'This certificate has basicConstraints CA:TRUE, making it a CA certificate. For SentinelOne on-prem deployments this is required for self-signed usage, but note it means the certificate can technically sign other certificates.',
+    suggestion: 'If you are deploying this as a leaf/server certificate only (not as a CA), consider setting CA:FALSE. SentinelOne on-prem typically accepts CA:TRUE self-signed certs, so this is advisory only.'
+  });
+ 
+  // 7. keyUsage: dataEncipherment + keyAgreement advisory — not typical for TLS
+  checks.push({
+    name: 'Key Usage Scope',
+    status: 'warn',
+    detail: 'keyUsage includes dataEncipherment and keyAgreement. RFC 5246 (TLS) only requires digitalSignature and keyEncipherment for RSA server certificates.',
+    suggestion: 'For strict RFC 5280 compliance, remove dataEncipherment and keyAgreement. These flags are not wrong but are broader than necessary for a TLS server certificate and may trigger warnings in strict policy scanners.'
+  });
+ 
+  // 8. extKeyUsage: serverAuth present (required for TLS)
+  checks.push({
+    name: 'Extended Key Usage: serverAuth Present',
+    status: 'ok',
+    detail: 'extKeyUsage includes id-kp-serverAuthentication (1.3.6.1.5.5.7.3.1). Required for TLS server certificates per RFC 5280 §4.2.1.12.',
+    suggestion: null
+  });
+ 
+  // 9. Serial number length – CA/B Forum BR §7.1: min 64 bits of entropy
+  const serial = cert.serialNumber;
+  // Our serial is '01' + 8 random bytes (hex) = 18 hex chars = ~64+ bits with random prefix
+  checks.push({
+    name: 'Serial Number Entropy',
+    status: 'ok',
+    detail: `Serial number includes 64+ bits of random entropy (CA/Browser Forum BR §7.1). Serial: ${serial.substring(0, 18)}…`,
+    suggestion: null
+  });
+ 
+  // Render
+  const checksEl = document.getElementById('standardsChecks');
+  const badgeEl = document.getElementById('standardsBadge');
+ 
+  const failCount = checks.filter(c => c.status === 'fail').length;
+  const warnCount = checks.filter(c => c.status === 'warn').length;
+ 
+  if (failCount > 0) {
+    badgeEl.textContent = `${failCount} ISSUE${failCount > 1 ? 'S' : ''}`;
+    badgeEl.className = 'standards-analysis-badge fail';
+  } else if (warnCount > 0) {
+    badgeEl.textContent = `${warnCount} WARNING${warnCount > 1 ? 'S' : ''}`;
+    badgeEl.className = 'standards-analysis-badge warn';
+  } else {
+    badgeEl.textContent = 'ALL PASS';
+    badgeEl.className = 'standards-analysis-badge pass';
+  }
+ 
+  const icons = { ok: '✅', warn: '⚠️', fail: '❌' };
+  checksEl.innerHTML = checks.map(c => `
+    <div class="sa-check ${c.status}">
+      <div class="sa-check-icon">${icons[c.status]}</div>
+      <div class="sa-check-content">
+        <div class="sa-check-name">${c.name}</div>
+        <div class="sa-check-detail">${c.detail}</div>
+        ${c.suggestion ? `<div class="sa-check-suggestion">${c.suggestion}</div>` : ''}
+      </div>
+    </div>
+  `).join('');
+ 
+  document.getElementById('standardsAnalysis').style.display = 'block';
+}
+ 
+// ── Main Certificate Generator ────────────────────────────────────────────────
 function generateCert() {
   hideError();
   const domain = v('domain');
@@ -1088,14 +1512,14 @@ function generateCert() {
   const ou = v('ou') || 'Cybersecurity';
   const email = v('email') || 'poc@cyber123.com';
   const days = parseInt(document.getElementById('days').value) || 825;
-
+ 
   if (!domain) return showError('Domain is required.');
   if (!fqdn) return showError('Common Name (Server FQDN) is required.');
-
+ 
   const btn = document.getElementById('generateBtn');
   btn.classList.add('loading');
   btn.disabled = true;
-
+ 
   // Defer to allow UI to update
   setTimeout(() => {
     try {
@@ -1103,7 +1527,7 @@ function generateCert() {
       const keys = forge.pki.rsa.generateKeyPair(2048);
       const privateKey = keys.privateKey;
       const publicKey = keys.publicKey;
-
+ 
       // Build CSR
       const csr = forge.pki.createCertificationRequest();
       csr.publicKey = publicKey;
@@ -1117,7 +1541,7 @@ function generateCert() {
         { name: 'emailAddress', value: email },
       ]);
       csr.sign(privateKey, forge.md.sha256.create());
-
+ 
       // Build certificate
       const cert = forge.pki.createCertificate();
       cert.publicKey = publicKey;
@@ -1125,7 +1549,7 @@ function generateCert() {
       cert.validity.notBefore = new Date();
       cert.validity.notAfter = new Date();
       cert.validity.notAfter.setDate(cert.validity.notBefore.getDate() + days);
-
+ 
       const attrs = [
         { name: 'countryName', value: country },
         { name: 'stateOrProvinceName', value: state },
@@ -1135,10 +1559,10 @@ function generateCert() {
         { name: 'commonName', value: fqdn },
         { name: 'emailAddress', value: email },
       ];
-
+ 
       cert.setSubject(attrs);
       cert.setIssuer(attrs);
-
+ 
       cert.setExtensions([
         { name: 'subjectKeyIdentifier' },
         { name: 'authorityKeyIdentifier', keyIdentifier: true, authorityCertIssuer: true, serialNumber: true },
@@ -1157,14 +1581,14 @@ function generateCert() {
           ]
         }
       ]);
-
+ 
       cert.sign(privateKey, forge.md.sha256.create());
-
+ 
       // Export PEM
       const crtPem = forge.pki.certificateToPem(cert);
       const keyPem = forge.pki.privateKeyToPem(privateKey);
       const csrPem = forge.pki.certificationRequestToPem(csr);
-
+ 
       const extContent = `subjectKeyIdentifier = hash
 authorityKeyIdentifier = keyid:always,issuer:always
 basicConstraints = CA:TRUE
@@ -1172,15 +1596,15 @@ keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment, 
 extendedKeyUsage = serverAuth, clientAuth
 subjectAltName = DNS:${domain}, DNS:*.${domain}
 issuerAltName = issuer:copy`;
-
+ 
       generatedFiles = { crt: crtPem, key: keyPem, csr: csrPem, ext: extContent };
-
+ 
       // Populate code blocks
       document.getElementById('code-crt').textContent = crtPem;
       document.getElementById('code-key').textContent = keyPem;
       document.getElementById('code-csr').textContent = csrPem;
       document.getElementById('code-ext').textContent = extContent;
-
+ 
       // Build info table
       const notAfter = new Date(cert.validity.notAfter);
       const notBefore = new Date(cert.validity.notBefore);
@@ -1199,26 +1623,29 @@ issuerAltName = issuer:copy`;
         ['Extended Key Usage', 'serverAuth, clientAuth'],
         ['Is CA', 'true (self-signed)'],
       ];
-
+ 
       document.getElementById('certInfoTable').innerHTML = rows.map(([k, v]) =>
         `<tr><td>${k}</td><td>${v}</td></tr>`
       ).join('');
-
-      // Set download links
-      makeDownloadLink(document.getElementById('dlCrt'), crtPem, 'server.crt');
-      makeDownloadLink(document.getElementById('dlKey'), keyPem, 'server.key');
-      makeDownloadLink(document.getElementById('dlCsr'), csrPem, 'server.csr');
+ 
+      // Standards compliance analysis
+      runStandardsAnalysis(cert, days, fqdn, domain);
+ 
+      // Set download links (certificate.* filenames)
+      makeDownloadLink(document.getElementById('dlCrt'), crtPem, 'certificate.crt');
+      makeDownloadLink(document.getElementById('dlKey'), keyPem, 'certificate.key');
+      makeDownloadLink(document.getElementById('dlCsr'), csrPem, 'certificate.csr');
       makeDownloadLink(document.getElementById('dlExt'), extContent, 'v3.ext');
-
+ 
       // Wire CTA download buttons
-      makeDownloadLink(document.getElementById('ctaDlCrt'), crtPem, 'server.crt');
-      makeDownloadLink(document.getElementById('ctaDlKey'), keyPem, 'server.key');
-
+      makeDownloadLink(document.getElementById('ctaDlCrt'), crtPem, 'certificate.crt');
+      makeDownloadLink(document.getElementById('ctaDlKey'), keyPem, 'certificate.key');
+ 
       // Show output + CTA
       document.getElementById('outputSection').style.display = 'block';
       document.getElementById('downloadCta').style.display = 'block';
       document.getElementById('downloadCta').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
+ 
     } catch (err) {
       showError('Generation failed: ' + err.message);
     } finally {
@@ -1230,3 +1657,4 @@ issuerAltName = issuer:copy`;
 </script>
 </body>
 </html>
+ 
