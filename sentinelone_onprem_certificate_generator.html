@@ -1,5 +1,5 @@
 <!-- This file generates self signed certificates based on the S1's SSL certificate requirements for on prem EDG and management server -->
-
+ 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -54,7 +54,7 @@
   .wrap {
     position: relative;
     z-index: 1;
-    max-width: 860px;
+    max-width: 1100px;
     margin: 0 auto;
     padding: 60px 24px 80px;
   }
@@ -842,6 +842,147 @@
   .sa-check.warn .sa-check-suggestion { border-color: rgba(251,146,60,0.4); }
   .sa-check.fail .sa-check-suggestion { border-color: rgba(255,77,109,0.4); }
  
+  /* Trust Store Instructions */
+  .trust-store {
+    display: none;
+    margin-top: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    animation: fadeUp 0.3s ease;
+  }
+ 
+  .trust-store-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+ 
+  .trust-store-icon { font-size: 22px; flex-shrink: 0; }
+ 
+  .trust-store-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+ 
+  .trust-store-sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+ 
+  .trust-os-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+ 
+  @media (max-width: 700px) {
+    .trust-os-grid { grid-template-columns: 1fr 1fr; }
+  }
+ 
+  .trust-os-card {
+    padding: 20px 22px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+ 
+  .trust-os-card:last-child { border-right: none; }
+ 
+  @media (max-width: 700px) {
+    .trust-os-card { border-right: none; border-bottom: 1px solid var(--border); }
+    .trust-os-card:last-child { border-bottom: none; }
+  }
+ 
+  .trust-os-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: var(--display);
+  }
+ 
+  .trust-os-icon { font-size: 15px; }
+ 
+  .trust-os-note {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+ 
+  .trust-cmd-block {
+    position: relative;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    overflow: hidden;
+  }
+ 
+  .trust-cmd {
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.7;
+    color: #a8d8a8;
+    padding: 10px 12px;
+    padding-right: 56px;
+    white-space: pre-wrap;
+    word-break: break-all;
+    margin: 0;
+  }
+ 
+  .trust-copy-btn {
+    position: absolute;
+    top: 6px; right: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--muted2);
+    font-family: var(--mono);
+    font-size: 9px;
+    padding: 3px 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.05em;
+  }
+ 
+  .trust-copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .trust-copy-btn.copied { color: #4ade80; border-color: #4ade80; }
+ 
+  .trust-os-hint {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+ 
+  .trust-os-hint code {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 1px 5px;
+    color: var(--muted2);
+    font-size: 10px;
+  }
+ 
   /* Footer */
   .footer {
     margin-top: 48px;
@@ -1175,6 +1316,77 @@
         </div>
       </div>
  
+      <!-- Trust Store Instructions -->
+      <div class="trust-store" id="trustStore">
+        <div class="trust-store-header">
+          <span class="trust-store-icon">🛡️</span>
+          <div>
+            <div class="trust-store-title">Add to Trusted Root Store</div>
+            <div class="trust-store-sub">Run the appropriate command on the machine that needs to trust this certificate</div>
+          </div>
+        </div>
+        <div class="trust-os-grid">
+ 
+          <!-- Windows -->
+          <div class="trust-os-card">
+            <div class="trust-os-label">
+              <span class="trust-os-icon">🪟</span> Windows
+              <span class="trust-os-note">Run as Administrator</span>
+            </div>
+            <div class="trust-cmd-block">
+              <pre class="trust-cmd">certutil -addstore -f "Root" certificate.crt</pre>
+              <button class="trust-copy-btn" onclick="copyTrust(this, 'certutil -addstore -f &quot;Root&quot; certificate.crt')">COPY</button>
+            </div>
+            <div class="trust-os-hint">Opens the system certificate store and adds the cert under Trusted Root Certification Authorities. Takes effect immediately for all users.</div>
+          </div>
+ 
+          <!-- macOS -->
+          <div class="trust-os-card">
+            <div class="trust-os-label">
+              <span class="trust-os-icon">🍎</span> macOS
+              <span class="trust-os-note">Requires sudo</span>
+            </div>
+            <div class="trust-cmd-block">
+              <pre class="trust-cmd">sudo security add-trusted-cert -d -r trustRoot \
+  -k /Library/Keychains/System.keychain certificate.crt</pre>
+              <button class="trust-copy-btn" onclick="copyTrust(this, 'sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain certificate.crt')">COPY</button>
+            </div>
+            <div class="trust-os-hint">Adds the cert to the System keychain as a trusted root, affecting all users and browsers on the machine.</div>
+          </div>
+ 
+          <!-- Debian / Ubuntu -->
+          <div class="trust-os-card">
+            <div class="trust-os-label">
+              <span class="trust-os-icon">🐧</span> Debian / Ubuntu
+              <span class="trust-os-note">Requires sudo</span>
+            </div>
+            <div class="trust-cmd-block">
+              <pre class="trust-cmd">sudo cp certificate.crt \
+  /usr/local/share/ca-certificates/
+sudo update-ca-certificates</pre>
+              <button class="trust-copy-btn" onclick="copyTrust(this, 'sudo cp certificate.crt /usr/local/share/ca-certificates/\nsudo update-ca-certificates')">COPY</button>
+            </div>
+            <div class="trust-os-hint">Copies the cert to the system CA directory and rebuilds the trusted store. Takes effect immediately for all system-level TLS connections.</div>
+          </div>
+ 
+          <!-- RHEL / CentOS -->
+          <div class="trust-os-card">
+            <div class="trust-os-label">
+              <span class="trust-os-icon">🎩</span> RHEL / CentOS
+              <span class="trust-os-note">Requires sudo</span>
+            </div>
+            <div class="trust-cmd-block">
+              <pre class="trust-cmd">sudo cp certificate.crt \
+  /etc/pki/ca-trust/source/anchors/
+sudo update-ca-trust</pre>
+              <button class="trust-copy-btn" onclick="copyTrust(this, 'sudo cp certificate.crt /etc/pki/ca-trust/source/anchors/\nsudo update-ca-trust')">COPY</button>
+            </div>
+            <div class="trust-os-hint">Also applies to Fedora and AlmaLinux. Uses the NSS shared database trust anchor path. Run <code>trust list</code> to verify after import.</div>
+          </div>
+ 
+        </div>
+      </div>
+ 
     </div>
   </div>
  
@@ -1300,6 +1512,14 @@ function switchTab(name, el) {
  
 function copyCode(name, btn) {
   const text = document.getElementById('code-' + name).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'COPIED!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'COPY'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+ 
+function copyTrust(btn, text) {
   navigator.clipboard.writeText(text).then(() => {
     btn.textContent = 'COPIED!';
     btn.classList.add('copied');
@@ -1644,6 +1864,7 @@ issuerAltName = issuer:copy`;
       // Show output + CTA
       document.getElementById('outputSection').style.display = 'block';
       document.getElementById('downloadCta').style.display = 'block';
+      document.getElementById('trustStore').style.display = 'block';
       document.getElementById('downloadCta').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
  
     } catch (err) {
