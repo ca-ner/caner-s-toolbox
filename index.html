@@ -1,6 +1,102 @@
 <!DOCTYPE html>
-<html lang='en'><head><meta charset='UTF-8'><title>Available Pages</title></head><body>
-<h1>Site Index</h1><ul>
-<li><a href="ne_pisirsem.html">ne_pisirsem.html</a></li>
-<li><a href="sentinelone_onprem_certificate_generator.html">sentinelone_onprem_certificate_generator.html</a></li>
-</ul></body></html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Index</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --border: #e2e8f0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 3rem 1rem;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            margin: 0 0 0.5rem 0;
+            color: var(--text-main);
+        }
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+        .grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0,0,0,0.05);
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+            display: block;
+        }
+        .card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -4px rgba(0,0,0,0.05);
+        }
+        .card-title {
+            color: var(--primary);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+        }
+        .card:hover .card-title {
+            color: var(--primary-hover);
+        }
+        .card-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin: 0;
+            line-height: 1.5;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Available Pages</h1>
+            <p class="subtitle">Dynamically generated directory of live layouts</p>
+        </header>
+        <main class="grid">
+            <a href="ne_pisirsem.html" class="card">
+                <h2 class="card-title">ne_pisirsem.html</h2>
+                <p class="card-desc">📝 What to cook based on what we have at home</p>
+            </a>
+            <a href="sentinelone_onprem_certificate_generator.html" class="card">
+                <h2 class="card-title">sentinelone_onprem_certificate_generator.html</h2>
+                <p class="card-desc">📝 &lt;!-- This file generates self signed certificates based on the S1&#x27;s SSL certificate requirements for on prem EDG and management server --&gt;</p>
+            </a>
+        </main>
+    </div>
+</body>
+</html>
