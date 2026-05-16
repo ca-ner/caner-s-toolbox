@@ -16,12 +16,27 @@ jobs:
       with:
         fetch-depth: 0
 
-    # Step 2: Run a script to build a beautifully styled dashboard
+    # Step 2: Use native Python to safely build the index.html without shell escaping issues
     - name: Generate index.html
+      shell: python
       run: |
-        # Write the HTML header and modern CSS styles
-        cat << 'EOF' > index.html
-        <!DOCTYPE html>
+        import os
+        import subprocess
+        import html
+
+        # Find all HTML files, ignoring index.html and hidden directories
+        html_files = []
+        for root, dirs, files in os.walk('.'):
+            dirs[:] = [d for d in dirs if not d.startswith('.')]
+            for file in files:
+                if file.endswith('.html') and file != 'index.html':
+                    path = os.path.relpath(os.path.join(root, file), '.')
+                    html_files.append(path)
+        
+        html_files.sort()
+
+        # Build the structured HTML string
+        html_content = """<!DOCTYPE html>
         <html lang="en">
         <head>
             <meta charset="UTF-8">
@@ -74,7 +89,7 @@ jobs:
                     border: 1px solid var(--border);
                     border-radius: 12px;
                     padding: 1.5rem;
-                    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+                    box-shadow: 0 1px 3px 0 rgba(0,0,0,0.05);
                     transition: all 0.2s ease-in-out;
                     text-decoration: none;
                     display: block;
@@ -82,7 +97,7 @@ jobs:
                 .card:hover {
                     border-color: var(--primary);
                     transform: translateY(-2px);
-                    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+                    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -4px rgba(0,0,0,0.05);
                 }
                 .card-title {
                     color: var(--primary);
@@ -111,14 +126,50 @@ jobs:
                     <p class="subtitle">Dynamically generated directory of live layouts</p>
                 </header>
                 <main class="grid">
-        EOF
+        """
 
-        # Step 3: Loop through HTML files, grab commit messages, and generate cards
-        find . -type f -name "*.html" ! -name "index.html" ! -path '*/.*' | sort | while read -r file; do
-          clean_path="${file#./}"
-          
-          # Get the last commit message for this specific file
-          commit_msg=$(git log -1 --pretty=format:%s -- "$file" 2>/dev/null || echo "Initial upload")
-          
-          # Clean up any HTML-breaking characters inside the commit message
-          commit_msg=$(echo "$commit_msg" |
+        # Append each file card dynamically
+        for file in html_files:
+            try:
+                commit_msg = subprocess.check_output(
+                    ["git", "log", "-1", "--pretty=format:%s", "--", file],
+                    stderr=subprocess.DEVNULL
+                ).decode("utf-8").strip()
+            except Exception:
+                commit_msg = "Initial upload"
+            
+            if not commit_msg:
+                commit_msg = "Initial upload"
+
+            # Safely encode special characters to prevent broken HTML
+            safe_path = html.escape(file)
+            safe_msg = html.escape(commit_msg)
+
+            html_content += f"""            <a href="{safe_path}" class="card">
+                        <h2 class="card-title">{safe_path}</h2>
+                        <p class="card-desc">📝 {safe_msg}</p>
+                    </a>\n"""
+
+        html_content += """        </main>
+            </div>
+        </body>
+        </html>
+        """
+
+        # Write out the generated index file
+        with open("index.html", "w", encoding="utf-8") as f:
+            f.write(html_content)
+
+    # Step 3: Commit and Push changes back to the repository
+    with-cleanup: false
+    - name: Commit and Push changes
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add index.html
+        if ! git diff --cached --quiet; then
+          git commit -m "Automated update of index.html with styled layout & commit notes"
+          git push
+        else
+          echo "No changes to index.html"
+        fi
