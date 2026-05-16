@@ -161,7 +161,6 @@ jobs:
             f.write(html_content)
 
     # Step 3: Commit and Push changes back to the repository
-    with-cleanup: false
     - name: Commit and Push changes
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
