@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ne Pişirsem? - Mobil Uyumlu v3</title>
+    <title>Ne Pişirsem? - Kolay Mobil Erişim</title>
     <style>
         :root {
             --primary-color: #2ec4b6;
@@ -70,9 +70,32 @@
             gap: 8px;
         }
 
-        .random-btn:active {
-            transform: translateY(1px);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        /* 📱 YÜZEN MOBİL BUTON (FLOATING ACTION BUTTON) */
+        .floating-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.3rem;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(231, 29, 54, 0.4);
+            cursor: pointer;
+            z-index: 99;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+            100% { transform: scale(1); }
         }
 
         /* Rastgele Sonuç Kutusu */
@@ -163,6 +186,8 @@
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
+            /* Mobilde butona basınca tam buraya düzgünce hizalansın */
+            scroll-margin-top: 90px; 
         }
 
         .section-title {
@@ -252,7 +277,11 @@
             font-size: 0.9rem;
         }
 
+        /* 💻 MASAÜSTÜ EKRAN DÜZENLEMELERİ */
         @media (min-width: 768px) {
+            .floating-btn {
+                display: none; /* Masaüstünde yan yana olduğu için yüzen butona gerek yok */
+            }
             .container {
                 flex-direction: row;
             }
@@ -283,15 +312,17 @@
         <button id="randomBtn" class="random-btn">🎲 Rastgele Yemek Seç</button>
     </header>
 
+    <button id="scrollToRecipesBtn" class="floating-btn">🍳 Yemekleri Göster</button>
+
     <div id="randomRecipeBox" class="random-recipe-box"></div>
 
     <div class="container">
         <div class="ingredients-panel">
-            <h2 class="panel-title">Evdeki Malzemeler</h2>
+            <h2 class="panel-title">Evdeki Malzemeleri Seç</h2>
             <div id="ingredientsContainer" class="ingredients-grid"></div>
         </div>
 
-        <div class="recipes-panel">
+        <div id="recipesPanel" class="recipes-panel">
             <div>
                 <h2 class="section-title">Tam Yapılabilecekler <span id="readyCount" class="badge">0</span></h2>
                 <div id="readyRecipes" class="recipes-grid">
@@ -309,7 +340,7 @@
     </div>
 
     <script>
-        // Tüm Yemek Veritabanı (Yeni eklenen 10 yemek dahil toplam 46 tarif)
+        // Sadece sizin onayladığınız net 42 yemeklik liste (36 Orijinal + Sonradan eklediğiniz 6 net yemek)
         const recipes = [
             { name: "İzmir Köfte", tags: ["Kıyma", "Patates", "Domates", "Biber", "Soğan"] },
             { name: "Fırında Tavuk", tags: ["Tavuk", "Patates", "Salça"] },
@@ -347,20 +378,15 @@
             { name: "Sucuklu Kaşarlı Wrap", tags: ["Sucuk", "Kaşar Peyniri", "Lavaş"] },
             { name: "Ton Balıklı Wrap", tags: ["Ton Balığı", "Lavaş", "Marul"] },
             { name: "Fırında Pirzola", tags: ["Pirzola", "Patates"] },
-            // YENİ EKLENEN 10 YEMEK:
+            // Sizin eklediğiniz net 6 yemek:
             { name: "Tavuk burger", tags: ["Tavuk", "Hamburger Ekmeği", "Patates", "Marul"] },
             { name: "Tandır", tags: ["Kuzu Eti", "Soğan"] },
             { name: "Et sote", tags: ["Kuşbaşı Et", "Biber", "Domates", "Soğan"] },
             { name: "Yoğurt çorbası", tags: ["Yoğurt", "Pirinç", "Yumurta", "Un"] },
             { name: "Tavuk çorbası", tags: ["Tavuk", "Un", "Limon"] },
-            { name: "Sosisli (hot dog)", tags: ["Sosis", "Sandviç Ekmeği", "Salça"] },
-            { name: "Tarhana çorbası", tags: ["Tarhana", "Salça", "Sarımsak", "Tereyağı"] },
-            { name: "Ezogelin çorbası", tags: ["Kırmızı Mercimek", "Pirinç", "Bulgur", "Soğan", "Salça"] },
-            { name: "Gözleme", tags: ["Yufka", "Patates", "Kaşar Peyniri"] },
-            { name: "Kısır", tags: ["Bulgur", "Salça", "Domates", "Marul"] }
+            { name: "Sosisli (hot dog)", tags: ["Sosis", "Sandviç Ekmeği", "Salça"] }
         ];
 
-        // Malzemeleri otomatik listeleme ve Türkçe karakterlere göre alfabetik sıralama
         const allIngredients = [...new Set(recipes.flatMap(r => r.tags))].sort((a, b) => a.localeCompare(b, 'tr'));
         const ingredientsContainer = document.getElementById('ingredientsContainer');
         const readyRecipesContainer = document.getElementById('readyRecipes');
@@ -369,7 +395,10 @@
         const missingCountBadge = document.getElementById('missingCount');
         const randomBtn = document.getElementById('randomBtn');
         const randomRecipeBox = document.getElementById('randomRecipeBox');
+        const scrollToRecipesBtn = document.getElementById('scrollToRecipesBtn');
+        const recipesPanel = document.getElementById('recipesPanel');
 
+        // Malzeme Listesini DOM'a Basma
         allIngredients.forEach(ing => {
             const label = document.createElement('label');
             label.className = 'ingredient-label';
@@ -388,7 +417,12 @@
             ingredientsContainer.appendChild(label);
         });
 
-        // Akıllı Odaklanmalı Rastgele Seçim Sistemi
+        // 🍳 Yüzen Butona Basınca Yemeklere Yumuşak Kaydırma Yapma
+        scrollToRecipesBtn.addEventListener('click', () => {
+            recipesPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+        // Rastgele Yemek Seçme Sistemi
         randomBtn.addEventListener('click', () => {
             const selectedRecipe = recipes[Math.floor(Math.random() * recipes.length)];
             const tagsHTML = selectedRecipe.tags.map(ing => `<span class="ing-tag random-tag">${ing}</span>`).join('');
@@ -400,13 +434,12 @@
             
             randomRecipeBox.style.display = 'block';
             
-            // Ekran kaymasının tam merkeze oturması için ufak gecikme
             setTimeout(() => {
                 randomRecipeBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 40);
         });
 
-        // Anlık Filtreleme Sistemi
+        // Dinamik Filtreleme Sistemi
         function updateRecipes() {
             const selectedIngredients = Array.from(document.querySelectorAll('#ingredientsContainer input:checked')).map(i => i.value);
 
