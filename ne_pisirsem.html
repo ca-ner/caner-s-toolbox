@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ne Pişirsem? - Kolay Mobil Erişim</title>
+    <title>Ne Pişirsem? - Kusursuz Hizalama</title>
     <style>
         :root {
             --primary-color: #2ec4b6;
@@ -70,7 +70,7 @@
             gap: 8px;
         }
 
-        /* 📱 YÜZEN MOBİL BUTON (FLOATING ACTION BUTTON) */
+        /* YÜZEN MOBİL BUTON */
         .floating-btn {
             position: fixed;
             bottom: 20px;
@@ -108,7 +108,8 @@
             display: none;
             animation: slideInDown 0.3s ease-out;
             box-shadow: 0 4px 12px rgba(255, 159, 28, 0.15);
-            scroll-margin-top: 140px; 
+            /* Rastgele sonuç açılınca da başlığın altında kalmasın */
+            scroll-margin-top: 160px; 
         }
 
         @keyframes slideInDown {
@@ -139,7 +140,7 @@
             background: var(--card-bg);
             padding: 1rem;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8 rgba(0,0,0,0.05);
         }
 
         .panel-title {
@@ -186,8 +187,8 @@
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
-            /* Mobilde butona basınca tam buraya düzgünce hizalansın */
-            scroll-margin-top: 90px; 
+            /* FIX: Sabit başlığın yüksekliği hesaplanarak boşluk artırıldı (90px -> 160px) */
+            scroll-margin-top: 160px; 
         }
 
         .section-title {
@@ -277,10 +278,10 @@
             font-size: 0.9rem;
         }
 
-        /* 💻 MASAÜSTÜ EKRAN DÜZENLEMELERİ */
+        /* MASAÜSTÜ DÜZENLEMELERİ */
         @media (min-width: 768px) {
             .floating-btn {
-                display: none; /* Masaüstünde yan yana olduğu için yüzen butona gerek yok */
+                display: none;
             }
             .container {
                 flex-direction: row;
@@ -340,7 +341,6 @@
     </div>
 
     <script>
-        // Sadece sizin onayladığınız net 42 yemeklik liste (36 Orijinal + Sonradan eklediğiniz 6 net yemek)
         const recipes = [
             { name: "İzmir Köfte", tags: ["Kıyma", "Patates", "Domates", "Biber", "Soğan"] },
             { name: "Fırında Tavuk", tags: ["Tavuk", "Patates", "Salça"] },
@@ -378,7 +378,6 @@
             { name: "Sucuklu Kaşarlı Wrap", tags: ["Sucuk", "Kaşar Peyniri", "Lavaş"] },
             { name: "Ton Balıklı Wrap", tags: ["Ton Balığı", "Lavaş", "Marul"] },
             { name: "Fırında Pirzola", tags: ["Pirzola", "Patates"] },
-            // Sizin eklediğiniz net 6 yemek:
             { name: "Tavuk burger", tags: ["Tavuk", "Hamburger Ekmeği", "Patates", "Marul"] },
             { name: "Tandır", tags: ["Kuzu Eti", "Soğan"] },
             { name: "Et sote", tags: ["Kuşbaşı Et", "Biber", "Domates", "Soğan"] },
@@ -398,7 +397,6 @@
         const scrollToRecipesBtn = document.getElementById('scrollToRecipesBtn');
         const recipesPanel = document.getElementById('recipesPanel');
 
-        // Malzeme Listesini DOM'a Basma
         allIngredients.forEach(ing => {
             const label = document.createElement('label');
             label.className = 'ingredient-label';
@@ -417,12 +415,12 @@
             ingredientsContainer.appendChild(label);
         });
 
-        // 🍳 Yüzen Butona Basınca Yemeklere Yumuşak Kaydırma Yapma
+        // 🍳 Geliştirilmiş Düzgün Hizalamalı Kaydırma Butonu
         scrollToRecipesBtn.addEventListener('click', () => {
             recipesPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
 
-        // Rastgele Yemek Seçme Sistemi
+        // Rastgele Seçim
         randomBtn.addEventListener('click', () => {
             const selectedRecipe = recipes[Math.floor(Math.random() * recipes.length)];
             const tagsHTML = selectedRecipe.tags.map(ing => `<span class="ing-tag random-tag">${ing}</span>`).join('');
@@ -435,11 +433,10 @@
             randomRecipeBox.style.display = 'block';
             
             setTimeout(() => {
-                randomRecipeBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                randomRecipeBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 40);
         });
 
-        // Dinamik Filtreleme Sistemi
         function updateRecipes() {
             const selectedIngredients = Array.from(document.querySelectorAll('#ingredientsContainer input:checked')).map(i => i.value);
 
