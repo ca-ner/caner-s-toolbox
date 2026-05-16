@@ -85,6 +85,8 @@
             display: none;
             animation: slideInDown 0.3s ease-out;
             box-shadow: 0 4px 12px rgba(255, 159, 28, 0.15);
+            /* Sayfa buraya kayarken sabit başlığın altında kalmasın diye üst boşluk payı */
+            scroll-margin-top: 140px; 
         }
 
         @keyframes slideInDown {
@@ -102,7 +104,7 @@
         /* Ana Konteyner */
         .container {
             display: flex;
-            flex-direction: column; /* Mobil öncelikli sıralama */
+            flex-direction: column;
             padding: 1rem;
             gap: 1rem;
             max-width: 1400px;
@@ -133,7 +135,6 @@
             gap: 0.5rem;
         }
 
-        /* Kolay Tıklanabilir Büyük Buton Alanları */
         .ingredient-label {
             display: flex;
             align-items: center;
@@ -252,7 +253,6 @@
             font-size: 0.9rem;
         }
 
-        /* Masaüstü Ekran Düzenlemeleri */
         @media (min-width: 768px) {
             .container {
                 flex-direction: row;
@@ -349,7 +349,6 @@
             { name: "Fırında Pirzola", tags: ["Pirzola", "Patates"] }
         ];
 
-        // Malzemeleri otomatik listeleme
         const allIngredients = [...new Set(recipes.flatMap(r => r.tags))].sort((a, b) => a.localeCompare(b, 'tr'));
         const ingredientsContainer = document.getElementById('ingredientsContainer');
         const readyRecipesContainer = document.getElementById('readyRecipes');
@@ -377,7 +376,7 @@
             ingredientsContainer.appendChild(label);
         });
 
-        // Rastgele Yemek Seçme Sistemi
+        // Güncellenmiş Akıllı Kaydırmalı Rastgele Seçim Sistemi
         randomBtn.addEventListener('click', () => {
             const selectedRecipe = recipes[Math.floor(Math.random() * recipes.length)];
             const tagsHTML = selectedRecipe.tags.map(ing => `<span class="ing-tag random-tag">${ing}</span>`).join('');
@@ -386,11 +385,16 @@
                 <div class="random-box-title">🎯 Şansına Çıkan Yemek: ${selectedRecipe.name}</div>
                 <div class="recipe-ingredients" style="margin-top:0.5rem">${tagsHTML}</div>
             `;
+            
+            // Kutuyu aç
             randomRecipeBox.style.display = 'block';
-            randomRecipeBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            // Tarayıcının yeni yüksekliği işlemesini bekleyip ekranın ortasına odakla
+            setTimeout(() => {
+                randomRecipeBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 40);
         });
 
-        // Anlık Filtreleme Sistemi
         function updateRecipes() {
             const selectedIngredients = Array.from(document.querySelectorAll('#ingredientsContainer input:checked')).map(i => i.value);
 
