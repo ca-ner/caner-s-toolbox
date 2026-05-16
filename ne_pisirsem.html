@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ne Pişirsem? - Mobil Uyumlu</title>
+    <title>Ne Pişirsem? - Mobil Uyumlu v3</title>
     <style>
         :root {
             --primary-color: #2ec4b6;
@@ -85,7 +85,6 @@
             display: none;
             animation: slideInDown 0.3s ease-out;
             box-shadow: 0 4px 12px rgba(255, 159, 28, 0.15);
-            /* Sayfa buraya kayarken sabit başlığın altında kalmasın diye üst boşluk payı */
             scroll-margin-top: 140px; 
         }
 
@@ -310,6 +309,7 @@
     </div>
 
     <script>
+        // Tüm Yemek Veritabanı (Yeni eklenen 10 yemek dahil toplam 46 tarif)
         const recipes = [
             { name: "İzmir Köfte", tags: ["Kıyma", "Patates", "Domates", "Biber", "Soğan"] },
             { name: "Fırında Tavuk", tags: ["Tavuk", "Patates", "Salça"] },
@@ -346,9 +346,21 @@
             { name: "Quasedilla", tags: ["Tavuk", "Lavaş", "Kaşar Peyniri", "Biber"] },
             { name: "Sucuklu Kaşarlı Wrap", tags: ["Sucuk", "Kaşar Peyniri", "Lavaş"] },
             { name: "Ton Balıklı Wrap", tags: ["Ton Balığı", "Lavaş", "Marul"] },
-            { name: "Fırında Pirzola", tags: ["Pirzola", "Patates"] }
+            { name: "Fırında Pirzola", tags: ["Pirzola", "Patates"] },
+            // YENİ EKLENEN 10 YEMEK:
+            { name: "Tavuk burger", tags: ["Tavuk", "Hamburger Ekmeği", "Patates", "Marul"] },
+            { name: "Tandır", tags: ["Kuzu Eti", "Soğan"] },
+            { name: "Et sote", tags: ["Kuşbaşı Et", "Biber", "Domates", "Soğan"] },
+            { name: "Yoğurt çorbası", tags: ["Yoğurt", "Pirinç", "Yumurta", "Un"] },
+            { name: "Tavuk çorbası", tags: ["Tavuk", "Un", "Limon"] },
+            { name: "Sosisli (hot dog)", tags: ["Sosis", "Sandviç Ekmeği", "Salça"] },
+            { name: "Tarhana çorbası", tags: ["Tarhana", "Salça", "Sarımsak", "Tereyağı"] },
+            { name: "Ezogelin çorbası", tags: ["Kırmızı Mercimek", "Pirinç", "Bulgur", "Soğan", "Salça"] },
+            { name: "Gözleme", tags: ["Yufka", "Patates", "Kaşar Peyniri"] },
+            { name: "Kısır", tags: ["Bulgur", "Salça", "Domates", "Marul"] }
         ];
 
+        // Malzemeleri otomatik listeleme ve Türkçe karakterlere göre alfabetik sıralama
         const allIngredients = [...new Set(recipes.flatMap(r => r.tags))].sort((a, b) => a.localeCompare(b, 'tr'));
         const ingredientsContainer = document.getElementById('ingredientsContainer');
         const readyRecipesContainer = document.getElementById('readyRecipes');
@@ -376,7 +388,7 @@
             ingredientsContainer.appendChild(label);
         });
 
-        // Güncellenmiş Akıllı Kaydırmalı Rastgele Seçim Sistemi
+        // Akıllı Odaklanmalı Rastgele Seçim Sistemi
         randomBtn.addEventListener('click', () => {
             const selectedRecipe = recipes[Math.floor(Math.random() * recipes.length)];
             const tagsHTML = selectedRecipe.tags.map(ing => `<span class="ing-tag random-tag">${ing}</span>`).join('');
@@ -386,15 +398,15 @@
                 <div class="recipe-ingredients" style="margin-top:0.5rem">${tagsHTML}</div>
             `;
             
-            // Kutuyu aç
             randomRecipeBox.style.display = 'block';
             
-            // Tarayıcının yeni yüksekliği işlemesini bekleyip ekranın ortasına odakla
+            // Ekran kaymasının tam merkeze oturması için ufak gecikme
             setTimeout(() => {
                 randomRecipeBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 40);
         });
 
+        // Anlık Filtreleme Sistemi
         function updateRecipes() {
             const selectedIngredients = Array.from(document.querySelectorAll('#ingredientsContainer input:checked')).map(i => i.value);
 
