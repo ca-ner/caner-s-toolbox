@@ -1,0 +1,45 @@
+name: Generate Index HTML
+
+on:
+  push:
+    branches:
+      - main # Change this to 'master' if your default branch is named master
+
+jobs:
+  build-index:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Check out the repository code
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Step 2: Run a script to find all HTML files and generate index.html
+    - name: Generate index.html
+      run: |
+        echo "<!DOCTYPE html>" > index.html
+        echo "<html lang='en'><head><meta charset='UTF-8'><title>Available Pages</title></head><body>" >> index.html
+        echo "<h1>Site Index</h1><ul>" >> index.html
+        
+        # Find all .html files, excluding index.html and hidden directories
+        find . -type f -name "*.html" ! -name "index.html" ! -path '*/.*' | sort | while read -r file; do
+          # Remove the leading './' from the file path
+          clean_path="${file#./}"
+          echo "<li><a href=\"$clean_path\">$clean_path</a></li>" >> index.html
+        done
+        
+        echo "</ul></body></html>" >> index.html
+
+    # Step 3: Commit the new index.html back to the repo if changes exist
+    - name: Commit and Push changes
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add index.html
+        # Only commit if index.html actually changed
+        if ! git diff --cached --quiet; then
+          git commit -m "Automated update of index.html"
+          git push
+        else
+          echo "No changes to index.html"
+        fi
