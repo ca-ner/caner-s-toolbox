@@ -187,7 +187,7 @@
   // ── Fetch JSON with streaming ──────────────────────────────────────────
   async function loadJSON() {
     try {
-      const resp = await fetch('https://ca-ner.github.io/caner-s-toolbox/arac-yorumlari/yorum.json');
+      const resp = await fetch('./yorum.json');
       if (!resp.ok) throw new Error('HTTP ' + resp.status);
       await readStream(resp);
     } catch (err) {
