@@ -2,6 +2,10 @@
 <!-- This file is generated to show JSON's content in a meaningful way.  -->
 <!-- Specifically designed for car reviews from one of the most popular reviewer -->
 
+<!-- Bu dosya belirtilen JSON'u okuyarak ekrana yansıtır -->
+<!-- This file is generated to show JSON's content in a meaningful way.  -->
+<!-- Specifically designed for car reviews from one of the most popular reviewer -->
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -308,9 +312,8 @@
     appVisible = true;
     document.getElementById('loading-screen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
-    document.getElementById('total-count').textContent = allRecords.length;
-    const videoCount = new Set(allRecords.map(r => r.video?.url).filter(Boolean)).size;
-    document.getElementById('video-count').textContent = videoCount;
+    document.getElementById('total-count').textContent = '…';
+    document.getElementById('video-count').textContent = '…';
     filtered = [...allRecords];
     render();
   }
