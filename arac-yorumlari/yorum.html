@@ -193,7 +193,17 @@
     try {
       const resp = await fetch('./yorum.json');
       if (!resp.ok) throw new Error('HTTP ' + resp.status);
-      await readStream(resp);
+
+      const text = await resp.text();
+      const data = JSON.parse(text);
+      allRecords = Array.isArray(data) ? data : [data];
+
+      showApp();
+
+      document.getElementById('total-count').textContent = allRecords.length;
+      const videoCount = new Set(allRecords.map(r => r.video?.url).filter(Boolean)).size;
+      document.getElementById('video-count').textContent = videoCount;
+      applyFilters();
     } catch (err) {
       // fetch failed (e.g. file:// protocol) — show manual picker
       document.getElementById('auto-load').style.display = 'none';
@@ -234,86 +244,14 @@
     reader.readAsText(file);
   }
 
-  async function readStream(resp) {
-      const reader = resp.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = '';
-      let inArray = false;
-      let depth = 0;
-      let objStart = -1;
-      let firstBatch = [];
-      let firstShown = false;
-      let totalBytes = parseInt(resp.headers.get('content-length') || '0');
-      let loadedBytes = 0;
-      const progressEl = document.getElementById('load-progress');
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
 
-        loadedBytes += value.length;
-        if (totalBytes > 0) {
-          const pct = Math.round(loadedBytes / totalBytes * 100);
-          if (progressEl) progressEl.textContent = pct + '%';
-        }
-
-        buffer += decoder.decode(value, { stream: true });
-
-        // Parse objects as they appear in the stream
-        for (let i = 0; i < buffer.length; i++) {
-          const ch = buffer[i];
-          if (!inArray && ch === '[') { inArray = true; continue; }
-          if (!inArray) continue;
-
-          if (ch === '{') {
-            if (depth === 0) objStart = i;
-            depth++;
-          } else if (ch === '}') {
-            depth--;
-            if (depth === 0 && objStart !== -1) {
-              const objStr = buffer.slice(objStart, i + 1);
-              try {
-                const rec = JSON.parse(objStr);
-                allRecords.push(rec);
-                if (!firstShown) firstBatch.push(rec);
-              } catch {}
-              objStart = -1;
-
-              // Show first batch immediately after getting 24 records
-              if (!firstShown && firstBatch.length >= 24) {
-                firstShown = true;
-                showApp();
-              }
-            }
-          }
-        }
-
-        // Keep only the tail of the buffer (unparsed remainder)
-        if (objStart !== -1) {
-          buffer = buffer.slice(objStart);
-          objStart = 0;
-        } else if (depth === 0) {
-          // Find last closing brace to trim safely
-          const lastClose = buffer.lastIndexOf('}');
-          if (lastClose !== -1) buffer = buffer.slice(lastClose + 1);
-        }
-      }
-
-      // Final render with all records
-      if (!firstShown) showApp();
-      document.getElementById('total-count').textContent = allRecords.length;
-      const videoCount = new Set(allRecords.map(r => r.video?.url).filter(Boolean)).size;
-      document.getElementById('video-count').textContent = videoCount;
-      applyFilters();
-  }
 
   function showApp() {
     if (appVisible) return;
     appVisible = true;
     document.getElementById('loading-screen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
-    document.getElementById('total-count').textContent = '…';
-    document.getElementById('video-count').textContent = '…';
     filtered = [...allRecords];
     render();
   }
