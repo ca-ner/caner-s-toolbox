@@ -1,0 +1,434 @@
+<!-- Bu dosya belirtilen JSON'u okuyarak ekrana yansıtır -->
+<!-- This file is generated to show JSON's content in a meaningful way.  -->
+<!-- Specifically designed for car reviews from one of the most popular reviewer -->
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Araç Yorum Veritabanı</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #18181f;
+    --border: #2a2a35;
+    --accent: #e8ff47;
+    --accent2: #ff4757;
+    --text: #f0f0f5;
+    --muted: #6b6b80;
+    --card-hover: #1e1e28;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; overflow-x:hidden; }
+  body::before {
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image: linear-gradient(rgba(232,255,71,.03) 1px,transparent 1px), linear-gradient(90deg,rgba(232,255,71,.03) 1px,transparent 1px);
+    background-size:40px 40px;
+  }
+
+  /* HEADER */
+  header {
+    position:sticky; top:0; z-index:100;
+    background:rgba(10,10,15,.92); backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--border);
+    padding:0 2rem; height:64px;
+    display:flex; align-items:center; justify-content:space-between; gap:1rem;
+  }
+  .logo { font-family:'Syne',sans-serif; font-weight:800; font-size:1.1rem; letter-spacing:-.02em; display:flex; align-items:center; gap:.5rem; }
+  .logo-dot { width:8px;height:8px;background:var(--accent);border-radius:50%;display:inline-block;animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)} }
+  .header-right { display:flex; align-items:center; gap:.75rem; flex-wrap:wrap; }
+  .stat-pill { font-family:'DM Mono',monospace; font-size:.7rem; color:var(--muted); background:var(--surface2); border:1px solid var(--border); padding:.3rem .75rem; border-radius:100px; white-space:nowrap; }
+  .stat-pill span { color:var(--accent); font-weight:500; }
+
+
+  /* UPLOAD */
+  #fallback-pick .drop-zone { border:1.5px dashed var(--border); border-radius:16px; padding:2.5rem 2rem; max-width:420px; width:100%; display:flex; flex-direction:column; align-items:center; gap:1.25rem; text-align:center; transition:border-color .2s, background .2s; cursor:default; }
+  #fallback-pick .drop-zone.dragover { border-color:var(--accent); background:rgba(232,255,71,.04); }
+  #loading-screen { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:calc(100vh - 64px); padding:2rem; text-align:center; gap:1rem; }
+  #auto-load { display:flex; flex-direction:column; align-items:center; gap:1rem; }
+  .loading-spinner { width:40px; height:40px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .loading-text { font-family:'DM Mono',monospace; font-size:.85rem; color:var(--muted); }
+  #load-progress { font-family:'DM Mono',monospace; font-size:.75rem; color:var(--accent); }
+  .upload-btn { display:inline-block; background:var(--accent); color:#0a0a0f; font-family:'Syne',sans-serif; font-weight:700; font-size:.85rem; letter-spacing:.05em; text-transform:uppercase; padding:.7rem 1.5rem; border-radius:100px; border:none; cursor:pointer; transition:opacity .2s; }
+  .upload-btn:hover { opacity:.85; }
+
+  /* APP */
+  #app { display:none; position:relative; z-index:1; }
+  #loading-screen { position:relative; z-index:1; }
+
+  /* DISCLAIMER */
+  #disclaimer { padding:.75rem 2rem; background:rgba(232,255,71,.06); border-bottom:1px solid rgba(232,255,71,.18); display:flex; align-items:flex-start; gap:.75rem; overflow:hidden; transition:max-height .4s ease, opacity .35s ease, padding .4s ease; max-height:120px; opacity:1; }
+  #disclaimer.hidden { max-height:0; opacity:0; padding-top:0; padding-bottom:0; pointer-events:none; border-bottom-color:transparent; }
+  #disclaimer-icon { flex-shrink:0; margin-top:1px; color:var(--accent); opacity:.7; }
+  #disclaimer p { font-size:.8rem; line-height:1.6; color:var(--muted); flex:1; }
+  .controls { padding:1.25rem 2rem; display:flex; align-items:center; justify-content:center; gap:1rem; flex-wrap:wrap; border-bottom:1px solid var(--border); background:var(--surface); }
+  .search-wrap { position:relative; width:100%; max-width:600px; }
+  .search-wrap svg { position:absolute; left:1.1rem; top:50%; transform:translateY(-50%); opacity:.4; pointer-events:none; }
+  .search-input { width:100%; background:var(--surface2); border:1.5px solid var(--border); border-radius:14px; padding:.8rem 1.25rem .8rem 3rem; color:var(--text); font-family:'DM Sans',sans-serif; font-size:1rem; outline:none; transition:border-color .2s, box-shadow .2s; }
+  .search-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(232,255,71,.12); }
+  .search-input::placeholder { color:var(--muted); }
+  .filter-group { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
+  .filter-label { font-family:'DM Mono',monospace; font-size:.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; }
+  .page-size-select { background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:.5rem .75rem; color:var(--text); font-family:'DM Sans',sans-serif; font-size:.85rem; outline:none; cursor:pointer; }
+
+  /* GRID */
+  .grid { padding:1.5rem 2rem; display:grid; grid-template-columns:repeat(auto-fill,minmax(360px,1fr)); gap:1rem; }
+
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:16px; overflow:hidden; transition:transform .2s ease, border-color .2s ease, box-shadow .2s ease; display:flex; flex-direction:column; animation:fadeUp .3s ease both; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .card:hover { transform:translateY(-3px); border-color:#3a3a50; box-shadow:0 12px 40px rgba(0,0,0,.4); background:var(--card-hover); }
+
+  .card-header { padding:1rem 1.25rem .75rem; display:flex; align-items:flex-start; justify-content:space-between; gap:.75rem; border-bottom:1px solid var(--border); }
+  .card-num { font-family:'DM Mono',monospace; font-size:.7rem; color:var(--muted); background:var(--surface2); border:1px solid var(--border); padding:.2rem .5rem; border-radius:6px; flex-shrink:0; margin-top:2px; white-space:nowrap; }
+  .card-title-group { flex:1; min-width:0; }
+
+
+  .card-brand { display:inline-block; font-family:'DM Mono',monospace; font-size:.7rem; font-weight:500; text-transform:uppercase; letter-spacing:.1em; padding:.2rem .6rem; border-radius:6px; margin-bottom:.4rem; background:rgba(232,255,71,.1); color:var(--accent); border:1px solid rgba(232,255,71,.2); }
+  .card-model { font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; letter-spacing:-.02em; line-height:1.3; color:var(--text); }
+  .card-body { padding:1rem 1.25rem; flex:1; display:flex; flex-direction:column; gap:.75rem; }
+  .card-year { font-family:'DM Mono',monospace; font-size:.75rem; color:var(--muted); display:flex; align-items:center; gap:.4rem; }
+  .card-year::before { content:''; display:inline-block; width:4px;height:4px; border-radius:50%; background:var(--accent2); flex-shrink:0; }
+  .card-comment { font-size:.875rem; line-height:1.65; color:#c0c0d0; flex:1; }
+  .card-footer { padding:.75rem 1.25rem; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:.5rem; flex-wrap:wrap; }
+  .card-video-link { display:inline-flex; align-items:center; gap:.5rem; font-size:.78rem; font-weight:500; color:#fff; background:rgba(255,71,87,.15); border:1px solid rgba(255,71,87,.3); padding:.3rem .75rem; border-radius:100px; text-decoration:none; transition:background .2s, border-color .2s, color .2s; flex-shrink:0; max-width:100%; overflow:hidden; }
+  .card-video-link:hover { background:rgba(255,71,87,.28); border-color:rgba(255,71,87,.6); color:#fff; }
+  .card-video-link svg { flex-shrink:0; color:var(--accent2); }
+  .card-video-link span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+
+  /* PAGINATION */
+  .pagination { padding:1.5rem 2rem 2rem; display:flex; align-items:center; justify-content:center; gap:.5rem; flex-wrap:wrap; }
+  .page-btn { background:var(--surface2); border:1px solid var(--border); color:var(--muted); font-family:'DM Mono',monospace; font-size:.8rem; padding:.5rem .85rem; border-radius:8px; cursor:pointer; transition:all .15s; min-width:38px; text-align:center; }
+  .page-btn:hover:not(:disabled) { border-color:var(--accent); color:var(--accent); }
+  .page-btn.active { background:var(--accent); color:#0a0a0f; border-color:var(--accent); font-weight:500; }
+  .page-btn:disabled { opacity:.3; cursor:not-allowed; }
+  .page-ellipsis { color:var(--muted); font-family:'DM Mono',monospace; font-size:.8rem; padding:.5rem .25rem; }
+
+  .empty { grid-column:1/-1; text-align:center; padding:4rem 2rem; color:var(--muted); font-size:.9rem; }
+
+  /* Toast */
+  .toast { position:fixed; bottom:2rem; left:50%; transform:translateX(-50%) translateY(20px); background:var(--accent); color:#0a0a0f; font-family:'Syne',sans-serif; font-weight:700; font-size:.85rem; padding:.65rem 1.5rem; border-radius:100px; opacity:0; transition:all .3s ease; pointer-events:none; z-index:999; white-space:nowrap; }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+  ::-webkit-scrollbar { width:6px; }
+  ::-webkit-scrollbar-track { background:var(--bg); }
+  ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+</style>
+</head>
+<body>
+
+<div id="loading-screen">
+  <div id="auto-load">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Veriler yükleniyor…</div>
+    <div id="load-progress"></div>
+  </div>
+  <div id="fallback-pick" style="display:none; flex-direction:column; align-items:center; gap:1.25rem; text-align:center;">
+    <div class="drop-zone" id="drop-zone">
+      <div style="font-size:2.5rem; opacity:.5;">🗂</div>
+      <div style="font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:700; letter-spacing:-.02em;">yorum.json</div>
+      <div style="color:var(--muted); font-size:.9rem; max-width:340px; line-height:1.6;">Dosyayı buraya sürükle bırak ya da seçmek için tıkla.<br><span style="font-size:.8rem; opacity:.6;">GitHub Pages'de bu adıma gerek yoktur.</span></div>
+      <button class="upload-btn" onclick="document.getElementById('file-input').click()">Dosyayı Seç</button>
+      <input type="file" id="file-input" accept=".json" style="display:none">
+    </div>
+  </div>
+</div>
+
+<div id="app">
+  <header>
+    <div class="logo"><span class="logo-dot"></span>Araç Yorum Veritabanı</div>
+    <div class="header-right">
+      <div class="stat-pill">Toplam <span id="total-count">0</span> kayıt</div>
+      <div class="stat-pill">Toplam <span id="video-count">0</span> video</div>
+      <div class="stat-pill">Gösterilen <span id="shown-count">0</span> kayıt</div>
+    </div>
+  </header>
+
+  <div id="disclaimer">
+    <svg id="disclaimer-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <p>Bu sayfada yer alan bilgiler otomobil incelemeleri içeren YouTube videolarından yapay zeka yardımıyla toplanmıştır. Tüm yorum ve bilgilendirmelerin sorumluluğu kanal sahiplerine aittir.</p>
+  </div>
+
+  <div class="controls">
+    <div class="search-wrap">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input class="search-input" type="text" id="search" placeholder="Marka, model veya yorum ara…">
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Sayfa</span>
+      <select class="page-size-select" id="page-size">
+        <option value="12">12</option>
+        <option value="24" selected>24</option>
+        <option value="48">48</option>
+        <option value="96">96</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+  <div class="pagination" id="pagination"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let allRecords = [];
+  let filtered   = [];
+  let currentPage = 1;
+  let pageSize    = 24;
+  let appVisible  = false;
+
+  // ── Fetch JSON with streaming ──────────────────────────────────────────
+  async function loadJSON() {
+    try {
+      const resp = await fetch('amc_yorum_052026.json');
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      await readStream(resp);
+    } catch (err) {
+      // fetch failed (e.g. file:// protocol) — show manual picker
+      document.getElementById('auto-load').style.display = 'none';
+      document.getElementById('fallback-pick').style.display = 'flex';
+    }
+  }
+
+  // ── File input fallback ────────────────────────────────────────────────
+  document.getElementById('file-input').addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    loadFromFile(file);
+  });
+
+  // Drag-and-drop on the drop zone
+  const dropZone = document.getElementById('drop-zone');
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file) loadFromFile(file);
+  });
+
+  function loadFromFile(file) {
+    document.getElementById('fallback-pick').style.display = 'none';
+    document.getElementById('auto-load').style.display = 'flex';
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        const records = Array.isArray(data) ? data : [data];
+        records.forEach(r => allRecords.push(r));
+        showApp();
+      } catch { alert('Geçersiz JSON dosyası.'); }
+    };
+    reader.readAsText(file);
+  }
+
+  async function readStream(resp) {
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let inArray = false;
+      let depth = 0;
+      let objStart = -1;
+      let firstBatch = [];
+      let firstShown = false;
+      let totalBytes = parseInt(resp.headers.get('content-length') || '0');
+      let loadedBytes = 0;
+      const progressEl = document.getElementById('load-progress');
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        loadedBytes += value.length;
+        if (totalBytes > 0) {
+          const pct = Math.round(loadedBytes / totalBytes * 100);
+          if (progressEl) progressEl.textContent = pct + '%';
+        }
+
+        buffer += decoder.decode(value, { stream: true });
+
+        // Parse objects as they appear in the stream
+        for (let i = 0; i < buffer.length; i++) {
+          const ch = buffer[i];
+          if (!inArray && ch === '[') { inArray = true; continue; }
+          if (!inArray) continue;
+
+          if (ch === '{') {
+            if (depth === 0) objStart = i;
+            depth++;
+          } else if (ch === '}') {
+            depth--;
+            if (depth === 0 && objStart !== -1) {
+              const objStr = buffer.slice(objStart, i + 1);
+              try {
+                const rec = JSON.parse(objStr);
+                allRecords.push(rec);
+                if (!firstShown) firstBatch.push(rec);
+              } catch {}
+              objStart = -1;
+
+              // Show first batch immediately after getting 24 records
+              if (!firstShown && firstBatch.length >= 24) {
+                firstShown = true;
+                showApp();
+              }
+            }
+          }
+        }
+
+        // Keep only the tail of the buffer (unparsed remainder)
+        if (objStart !== -1) {
+          buffer = buffer.slice(objStart);
+          objStart = 0;
+        } else if (depth === 0) {
+          // Find last closing brace to trim safely
+          const lastClose = buffer.lastIndexOf('}');
+          if (lastClose !== -1) buffer = buffer.slice(lastClose + 1);
+        }
+      }
+
+      // Final render with all records
+      if (!firstShown) showApp();
+      document.getElementById('total-count').textContent = allRecords.length;
+      const videoCount = new Set(allRecords.map(r => r.video?.url).filter(Boolean)).size;
+      document.getElementById('video-count').textContent = videoCount;
+      applyFilters();
+  }
+
+  function showApp() {
+    if (appVisible) return;
+    appVisible = true;
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('total-count').textContent = allRecords.length;
+    const videoCount = new Set(allRecords.map(r => r.video?.url).filter(Boolean)).size;
+    document.getElementById('video-count').textContent = videoCount;
+    filtered = [...allRecords];
+    render();
+  }
+
+  // ── Filter & render ─────────────────────────────────────────────────────
+  function applyFilters() {
+    const q = document.getElementById('search').value.toLowerCase().trim();
+
+    filtered = allRecords.filter(r => {
+      return !q || [r.marka, r.model, r.yorum, r.yil].filter(Boolean).join(' ').toLowerCase().includes(q);
+    });
+
+    currentPage = 1;
+    render();
+  }
+
+  function render() {
+    pageSize = parseInt(document.getElementById('page-size').value);
+    const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+    if (currentPage > totalPages) currentPage = totalPages;
+
+    const start = (currentPage - 1) * pageSize;
+    const slice = filtered.slice(start, start + pageSize);
+    document.getElementById('shown-count').textContent = filtered.length;
+
+    const grid = document.getElementById('grid');
+    grid.innerHTML = '';
+
+    if (!slice.length) {
+      grid.innerHTML = '<div class="empty">Kayıt bulunamadı.</div>';
+    } else {
+      slice.forEach((r, i) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.style.animationDelay = `${i * 0.025}s`;
+        card.dataset.sira = r.sira;
+
+        const videoUrl = r.video?.url || '';
+        const videoAd  = r.video?.ad  || '';
+
+        card.innerHTML = `
+          <div class="card-header">
+            <div class="card-title-group">
+              <div class="card-brand">${esc(r.marka||'')}</div>
+              <div class="card-model">${esc(r.model||'')}</div>
+            </div>
+            <div class="card-num">#${esc(String(r.sira ?? start+i+1))}</div>
+          </div>
+          <div class="card-body">
+            <div class="card-year">${esc(r.yil||'')}</div>
+            <div class="card-comment">${esc(r.yorum||'')}</div>
+          </div>
+          <div class="card-footer">
+            <a class="card-video-link" href="${esc(videoUrl)}" target="_blank" rel="noopener" style="${videoUrl?'':'display:none'}">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--accent2)" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              <span>${esc(videoAd || 'Video izle')}</span>
+            </a>
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+    }
+
+    renderPagination(totalPages);
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  // ── Pagination ───────────────────────────────────────────────────────────
+  function renderPagination(totalPages) {
+    const pag = document.getElementById('pagination');
+    pag.innerHTML = '';
+    const mkBtn = (label, page, disabled=false, active=false) => {
+      const b = document.createElement('button');
+      b.className = 'page-btn' + (active ? ' active' : '');
+      b.textContent = label; b.disabled = disabled;
+      b.onclick = () => { currentPage = page; render(); };
+      return b;
+    };
+    pag.appendChild(mkBtn('←', currentPage-1, currentPage===1));
+    let last = 0;
+    smartRange(currentPage, totalPages).forEach(p => {
+      if (p - last > 1) { const d = document.createElement('span'); d.className='page-ellipsis'; d.textContent='…'; pag.appendChild(d); }
+      pag.appendChild(mkBtn(p, p, false, p===currentPage));
+      last = p;
+    });
+    pag.appendChild(mkBtn('→', currentPage+1, currentPage===totalPages));
+  }
+
+  function smartRange(cur, total) {
+    if (total <= 7) return Array.from({length:total},(_,i)=>i+1);
+    const s = new Set([1, total]);
+    for (let i=Math.max(2,cur-2); i<=Math.min(total-1,cur+2); i++) s.add(i);
+    return [...s].sort((a,b)=>a-b);
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  document.getElementById('search').addEventListener('input', applyFilters);
+  document.getElementById('page-size').addEventListener('change', () => { currentPage=1; render(); });
+
+  // Dismiss disclaimer on any click or search
+  function dismissDisclaimer() {
+    document.getElementById('disclaimer').classList.add('hidden');
+  }
+  document.addEventListener('click', dismissDisclaimer, { once: true });
+  document.getElementById('search').addEventListener('input', dismissDisclaimer, { once: true });
+
+  // Start loading
+  loadJSON();
+</script>
+</body>
+</html>
